@@ -1,0 +1,89 @@
+.product {
+  width: 100%;
+  height: 100%;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.product__topInfo {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px;
+}
+
+.product__image {
+  display: flex;
+  width: 100%;
+  height: 160px;
+  max-width: 200px;
+  max-height: 275px;
+  background-color: rgba(255, 255, 255, 0.329);
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.product__image > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.product__rating {
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.product__bottomInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+.product__price {
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.product__addToBasketButton {
+  min-width: fit-content;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product__addToBasketButton > button {
+  background: var(--color-button-primary);
+  border: 1px solid;
+  min-width: 150px;
+  min-height: 30px;
+  border-color: var(--color-border-primary);
+  color: #111;
+}
