@@ -67,9 +67,9 @@ function Footer() {
           alt=""
         />
         <span className="Footer__Line-message">
-          fake amazon clone developed by &copy;{" "}
-          <a href="http://stjapps.in" target="_blank">
-            STJ
+          Amazon clone developed by &copy;{" "}
+          <a href="#" target="_blank">
+            Hardik Chaturvedi
           </a>
         </span>
       </div>

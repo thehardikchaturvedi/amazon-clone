@@ -192,18 +192,6 @@ function moveCorousal(counter, slides, len) {
     setTimeout(() => {
         moveCorousal(counter, slides, len);
     }, 5000)
-
-    parseInt(counter) % 5 === 0 ? (
-        setTimeout(() => {
-            toast.info(`${faker.name.findName()} added new product to cart`, {
-                position: "bottom-left"
-            });
-        }, 10500)
-    ) : (
-            setTimeout(() => {
-            }, 21000)
-        )
-
 }
 
 export default Home
