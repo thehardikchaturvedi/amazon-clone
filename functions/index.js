@@ -1,40 +1,48 @@
-const functions = require("firebase-functions");
-const express = require("express");
-const cors = require("cors");
+const functions = require('firebase-functions');
+const express = require('express')
+const cors = require('cors')
+
+// // Create and Deploy Your First Cloud Functions
+// // https://firebase.google.com/docs/functions/write-firebase-functions
+//
+// exports.helloWorld = functions.https.onRequest((request, response) => {
+//   functions.logger.info("Hello logs!", {structuredData: true});
+//   response.send("Hello from Firebase!");
+// });
+
+// secret key from firebase
 const stripe = require("stripe")(
-  "sk_test_51HPvU9DFg5koCdLGeOEiFvwHat4v8eMjX6SY0YCwxPBQBUPhKy1fPVhiSM5cQtgW7QBG9ydQcXnW57TDxVE2f3H000HSfmEQZF"
+    'sk_test_51HPvTZEm4kUlkaUGUtdgfKtGfv4XjINHF9bohxPtgELHIva3ukVTZnoQ0lb7JrT6exoYBDigELGUZZrqCrWGEEDI00bTwhkh9Q'
+    // your private api key here
 );
 
 // API
 
-// - App config
-const app = express();
+// - App Config
+const app = express()
 
-// - Middlewares
-app.use(cors({ origin: true }));
-app.use(express.json());
+// - Middleware
+app.use(cors({ origin: true }))
+app.use(express.json())
 
-// - API routes
-app.get("/", (request, response) => response.status(200).send("hello world"));
+// - API Routes
+app.get('/', (request, response) => response.status(200).send('hello world'))
+app.post('/payments/create', async (request, response) => {
+    const total = request.query.total
+    console.log("PAyment request received for -> " + total)
 
-app.post("/payments/create", async (request, response) => {
-  const total = request.query.total;
+    const paymentIntent = await stripe.paymentIntents.create({
+        amount: total,
+        currency: "inr"
+    })
 
-  console.log("Payment Request Recieved BOOM!!! for this amount >>> ", total);
+    // ok created
+    response.status(201).send({
+        clientSecret: paymentIntent.client_secret
+    })
+})
 
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: total, // subunits of the currency
-    currency: "usd",
-  });
+// - Listen
+exports.api = functions.https.onRequest(app)
 
-  // OK - Created
-  response.status(201).send({
-    clientSecret: paymentIntent.client_secret,
-  });
-});
-
-// - Listen command
-exports.api = functions.https.onRequest(app);
-
-// Example endpoint
-// http://localhost:5001/challenge-4b2b2/us-central1/api
+// URL: http://localhost:5001/clone-36782/us-central1/api

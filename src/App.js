@@ -1,61 +1,96 @@
-import React, { useEffect } from "react";
-import "./App.css";
-import Header from "./Header";
-import Home from "./Home";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Checkout from "./Checkout";
-import Login from "./Login";
-import Payment from "./Payment";
-import Orders from "./Orders";
-import { auth } from "./firebase";
-import { useStateValue } from "./StateProvider";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
+import React, { useState } from 'react';
+import './App.css';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import { useEffect } from 'react'
+import Home from './components/Home/Home'
+import Cart from './components/Cart/Cart'
+import Login from './components/Login/Login'
+import Header from './layout/Header/Header'
+import Orders from './components/Orders/Orders'
+import Profile from './components/Profile/Profile'
+import Payment from './components/Payment/Payment'
+import { loadStripe } from '@stripe/stripe-js'
+import 'react-toastify/dist/ReactToastify.css';
+import { Elements } from '@stripe/react-stripe-js'
+import { auth, db } from './firebase/firebaseConfig';
+import { useStateValue } from './context/StateProvider';
+import Footer from './layout/Footer/Footer';
+import ProductList from './components/ProductList/ProductList';
 
-const promise = loadStripe(
-  "pk_test_51HPvU9DFg5koCdLGJJbNo60QAU99BejacsvnKvT8xnCu1wFLCuQP3WBArscK3RvSQmSIB3N0Pbsc7TtbQiJ1vaOi00X9sIbazL"
-);
+const promise = loadStripe('pk_test_51HPvTZEm4kUlkaUGOprKB6CIt1RW7nlhHhINLYNBJCTM2m2eSwsML1Lq6eEJmHadidUcmUAP1Rbtq45kC4EW9Iv200K0HUq19q')
 
 function App() {
-  const [{}, dispatch] = useStateValue();
+  const [profile, setProfile] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [{ user }, dispatch] = useStateValue()
 
   useEffect(() => {
-    // will only run once when the app component loads...
 
-    auth.onAuthStateChanged((authUser) => {
-      console.log("THE USER IS >>> ", authUser);
 
-      if (authUser) {
-        // the user just logged in / the user was logged in
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      // user is logged in
+      dispatch({
+        type: "SET_USER",
+        user: authUser ? authUser : null
+      })
+    })
 
-        dispatch({
-          type: "SET_USER",
-          user: authUser,
-        });
-      } else {
-        // the user is logged out
-        dispatch({
-          type: "SET_USER",
-          user: null,
-        });
-      }
+    return () => {
+      // any cleanup
+      unsubscribe()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (user && profile) {
+      db.collection('users').doc(user?.uid).collection('profile')
+        .onSnapshot(snapshot => (
+          setProfile(snapshot.docs.map(doc => doc.data()))
+        ))
+    }
+    else
+      setProfile([])
+
+    if (user && products) {
+      db.collection('products').doc().collection('products')
+        .onSnapshot(snapshot => (
+          setProducts(snapshot.docs.map(doc => doc.data()))
+        ))
+    }
+    else
+      setProducts([])
+  }, [user])
+
+  useEffect(() => {
+    dispatch({
+      type: "SET_PROFILE",
+      userName: profile[0],
     });
-  }, []);
+  }, [profile])
+
+  console.log(profile)
 
   return (
     <Router>
-      <div className="app">
+      <div className="App">
         <Switch>
-          <Route path="/orders">
+          <Route path="/cart">
             <Header />
-            <Orders />
+            <Cart />
           </Route>
           <Route path="/login">
             <Login />
           </Route>
-          <Route path="/checkout">
+          <Route path="/profile">
+            <Profile />
+          </Route>
+          <Route path="/orders">
             <Header />
-            <Checkout />
+            <Orders />
+          </Route>
+          <Route path="/products">
+            <Header />
+            <ProductList />
           </Route>
           <Route path="/payment">
             <Header />
@@ -68,6 +103,7 @@ function App() {
             <Home />
           </Route>
         </Switch>
+        <Footer />
       </div>
     </Router>
   );
