@@ -4,7 +4,7 @@ import 'firebase/auth'
 
 const firebaseApp = firebase.initializeApp({
     apiKey: "AIzaSyDTxvOJqkbrAudCtlN-ffozImciXZhNmUA",
-    authDomain: "https://thehardikchaturvedi.github.io/login",
+    authDomain: "https://thehardikchaturvedi.github.io/amazon-clone/",
     projectId: "clone-93bf2",
     storageBucket: "clone-93bf2.appspot.com",
     messagingSenderId: "1030329283038",
